@@ -4,13 +4,13 @@ class Login():
     def __init__(self, name, id):
         self.id = id
         self.name = name
-        self.db = Database().get_conn()
-
+        self.db = Database()
 
     def create_player(self):
         try:
+            conn = self.db.get_conn()
             sql = "insert into player (name) VALUES(%s)"
-            cursor = self.db.cursor()
+            cursor = conn.cursor(dictionary=True)
             cursor.execute(sql, (self.name,))
             return {
                 "id": cursor.lastrowid,
@@ -21,6 +21,14 @@ class Login():
 
     def login_player(self):
         try:
-            pass
+            conn = self.db.get_conn()
+            sql = "SELECT * FROM player WHERE name=%s AND id=%s"
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute(sql, (self.name, self.id))
+            result = cursor.fetchone()
+            if result:
+                return result
+            return {}
+            
         except Exception as e:
             print(e)

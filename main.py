@@ -11,15 +11,18 @@ CORS(app)
 def helloWorld():
   return "Hello, cross-origin-world!"
 
-@app.route("/login/<name>", methods=['GET', 'POST'])
-def login(name):
+#args 
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+  params = request.args.to_dict()
+
   if request.method == 'GET':
-    return f"GET METHOD LOGIN {name}"
+    user = Login(params["name"], params["ID"]).login_player()
+    return user
   if request.method == 'POST':
-    x = Login("abc")
-    
-    print(x.create_player())
-    return f"POST METHOD LOGIN {name}"
+    return params
+    #x = Login(name, 1)
+
 
   
 
