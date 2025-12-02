@@ -1,0 +1,30 @@
+/login/?player=x GET
+tarkistaa jos pelaaja on olemassa syötteellä nimi#id
+    -palauttaa false / tyhjä dict jos ei ole 
+    -palauttaa json id ja nimi jos on olemassa
+
+/login/?player=x POST
+    Luo käyttäjän ja palauttaa json id ja nimen
+
+/game/?player=x GET
+tarkistaa onko pelaajalla kesken olevia pelejä
+    -jos on kesken olevia palauttaa pelit json muodossa
+    -jos ei ole kesken olevia pelejä palauttaa false / tyhjän json
+
+/game/?player=x POST
+tarkistaa onko pelaaja olemassa ja luo uuden pelin pelaajalle
+    -palauttaa pelin json muodossa
+
+/question GET
+antaa random kysymyksen jota ei olla vastattu ja vastauksen vaihtoehdot
+
+/question?question_ID=x&answer_ID=x POST
+pistää kysymyksen tilan vastattu ja tarkistaa onko vastaus oikea
+
+
+
+
+
+
+
+game_question taulu pitää korjata, referoi pelaajan id, game idn sijaan ja ei ole foreign keytä
