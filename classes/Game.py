@@ -1,6 +1,7 @@
 class Game():
-    def __init__(self):
-        pass
+    def __init__(self, player_ID):
+        self.player_ID = player_ID
+
 
     def create_game(self):
         pass
