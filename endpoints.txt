@@ -21,10 +21,20 @@ antaa random kysymyksen jota ei olla vastattu ja vastauksen vaihtoehdot
 /question?question_ID=x&answer_ID=x POST
 pistää kysymyksen tilan vastattu ja tarkistaa onko vastaus oikea
 
+/airport?game_id=x GET 
+palauttaa lentokentät peliin liittyvät lentokentät
+
+/airport?airport_id=x POST
+pistää lentokentän vierailetuksi 
+
+/highscores GET
+palauttaa top 10 pelaajan highscoret
+
+/highscores?player_id GET
+palautaa pelaajan highscore sija kaikista pelaajista
 
 
 
 
 
 
-game_question taulu pitää korjata, referoi pelaajan id, game idn sijaan ja ei ole foreign keytä
