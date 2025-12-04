@@ -44,7 +44,7 @@ class Game():
 
     #def select_game_questions(self):
        # pass
-    #sama metodi löytyy question.py Luokasta
+    #Sama metodi löytyy question.py Luokasta.
 
 
     def select_game_continent(self):
@@ -97,12 +97,21 @@ class Game():
 
 
     def get_game(self, player_id):
-        conn = self.db.get_conn()
-        cursor = conn.cursor(dictionary=True)
-        sql = "select * from game where player_id = %s"
-        cursor.execute(sql, (player_id,))
-        game = cursor.fetchone()
-        return game
+        if player_id == "":
+            return {"error": "player_id ei löydy"}
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "select * from game where player_id = %s"
+            cursor.execute(sql, (player_id,))
+            game = cursor.fetchone()
+            return game
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500    
 
 
 
