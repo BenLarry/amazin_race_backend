@@ -42,8 +42,10 @@ class Game():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
 
-    def select_game_questions(self):
-        pass
+    #def select_game_questions(self):
+       # pass
+    #sama metodi löytyy question.py Luokasta
+
 
     def select_game_continent(self):
         if self.continent == None:
@@ -78,8 +80,21 @@ class Game():
             return {"error": "geneerinen virheilmoitus"}, 500    
 
 
-    def set_game_state(self):
-        pass
+    def set_game_state(self, ID):
+        if ID == None:
+            return {"error": "ID:tä ei löytynyt"}
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "UPDATE game SET is_over = 1 where ID = %s"
+            cursor.execute(sql, (ID,))
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500    
+
 
     def get_game(self, player_id):
         conn = self.db.get_conn()
@@ -95,12 +110,11 @@ pelaaja1 = Login("moi", 6)
 
 peli = Game(pelaaja1.id, "EU")
 
-
 ok = peli.get_game(pelaaja1.id)
 
 print(ok)
 
-
+peli.set_game_state(ok['ID'])
 #maanosa = peli.select_game_continent()
 
 #print(maanosa)
