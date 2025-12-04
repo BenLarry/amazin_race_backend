@@ -1,12 +1,14 @@
 from database import Database
+from Game import Game
+from Login import Login
 
 class Airport():
-    def __init__(self, visited, special,game_ID, ident = None):
+    def __init__(self, visited, special, game_id, ident = None):
         self.db = Database()
         self.ident = ident
         self.visited = visited
         self.special = special
-        self.game_ID = game_ID
+        self.game_id = game_id
         
     
         
@@ -26,14 +28,14 @@ class Airport():
             return {"error": "geneerinen virheilmoitus"}, 500    
         
 
-    def set_airport_special(self):
+    def set_airport_special(self, game_id):
         if self.ident == None:
             return {"error": "Identtiä ei löydy"}
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
-            sql = "UPDATE game_aiport SET special = 1 where ident = %s"
-            cursor.execute(sql, (self.ident,))
+            sql = "UPDATE game_aiport SET special = 1 where ident = %s AND game_id = %s"
+            cursor.execute(sql, (self.ident, self.game_id))
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
@@ -48,7 +50,7 @@ class Airport():
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
-            sql = "SELECT ident, id, name, type, latitude_deg, longitude_deg FROM airport WHERE ident = %s"
+            sql = "SELECT ident, id, name, type, latitude_deg, longitude_deg FROM game_airport WHERE ident = %s"
             cursor.execute(sql, (self.ident, ))
             airport_data = cursor.fetchall()
             print(airport_data)
@@ -61,7 +63,29 @@ class Airport():
             return {"error": "geneerinen virheilmoitus"}, 500    
         
 
+peli = Game(6, "EU")
+
+maanosa = peli.select_game_continent()
+
+print(maanosa)
+
+ok = peli.select_game_airports(maanosa['continent'])
+
+kenttä1 = peli.select_random_airport()
+
+kenttä2 = peli.select_random_airport()
 
 
-ok = Airport(0, 0, 0,)
+pelaaja1 = Login("moi", 6)
+
+
+
+ok2 = peli.create_game(pelaaja1.id, kenttä1, kenttä2, kenttä1)
+
+
+
+
+
+
+ok = Airport(0, 0, 0, 48)
 ok.get_airport()

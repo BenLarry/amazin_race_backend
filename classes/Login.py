@@ -1,4 +1,4 @@
-from classes.Database import Database
+from database import Database
 
 class Login():
     def __init__(self, name, id):

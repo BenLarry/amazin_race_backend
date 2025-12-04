@@ -1,7 +1,9 @@
 from database import Database
+from Login import Login
+from Game import Game
 
 class Question():
-    def __init__(self, question, points, level, ID = None):
+    def __init__(self, points ="", level = "" ,question = "", ID = None):
         self.db = Database()
         self.ID = ID
         self.question = question
@@ -11,10 +13,7 @@ class Question():
         
 
     def get_question(self):
-        if self.ID == None:
-            return {"error": "ID:tä ei löydy"}
         try:
-
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
             sql = """ 
@@ -34,7 +33,27 @@ class Question():
             """
             cursor.execute(sql)
             result = cursor.fetchall()
-            print(result)
+            formatted_question = {
+                "ID": result[0]["ID"],
+                "question": result[0]["question"],
+                "points": result[0]["points"],
+                "choice_1": {
+                    "ID": 1,
+                    "answer": result[0]["choice"],
+                    "is_correct": result[0]["is_correct"]
+                },
+                "choice_2": {
+                    "ID": 2,
+                    "answer": result[1]["choice"],
+                    "is_correct": result[1]["is_correct"]
+                },
+                "choice_3": {
+                    "ID": 3,
+                    "answer": result[2]["choice"],
+                    "is_correct": result[2]["is_correct"]
+                },
+            }
+            return formatted_question
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
@@ -45,9 +64,9 @@ class Question():
 
 
 
-    def select_game_questions(self):
-        if self.ID == None:
-            return {"error": "ID:tä ei löydy"}
+    def select_game_questions(self, game_id):
+        if game_id == '':
+            return {"error": "game_ID:tä ei löydy"}
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
@@ -69,9 +88,9 @@ class Question():
             
 
 
-            sql_update_questions = "INSERT INTO game_question(question_ID, answered) VALUES(%s, 0)"
+            sql_update_questions = "INSERT INTO game_question(question_ID, game_id, answered) VALUES(%s, %s, 0)"
             for question in questions:
-                cursor.execute(sql_update_questions, (question['ID'],))
+                cursor.execute(sql_update_questions, (question['ID'], game_id))
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
@@ -83,8 +102,21 @@ class Question():
         
 
         
+pelaaja1 = Login("moi", 6)
 
-        
-ok = Question(1, 1, 1, 1)
-ok.select_game_questions()
-print(ok.get_question())
+peli = Game(pelaaja1.id, "EU")
+
+
+okei = peli.get_game(pelaaja1.id)
+
+print("--------------------------------------")
+print(okei)
+print("----------------------------------------")     
+ok = Question()
+jees = ok.select_game_questions(okei['ID'])
+
+kysymys= ok.get_question()
+
+
+for i in range(1, 4): 
+    print(kysymys[f"choice_{i}"]["answer"])
