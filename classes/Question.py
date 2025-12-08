@@ -57,4 +57,7 @@ class Question():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
+        
+    def set_question_answered(self):
+        pass
 
