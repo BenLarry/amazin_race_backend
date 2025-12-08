@@ -27,7 +27,7 @@ def login():
 @app.route("/game", methods=['GET', 'POST'])
 def game():
   params = request.args.to_dict()
-
+  
   if request.method == 'GET':
     game = Game(params["player_ID"])
     return game.get_game()
