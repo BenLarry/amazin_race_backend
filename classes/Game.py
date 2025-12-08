@@ -3,8 +3,8 @@ from classes.Airport import Airport
 import random
 
 class Game():
-    def __init__(self, player_id = None):
-        self.player_ID = player_id
+    def __init__(self, player_ID = None):
+        self.player_ID = player_ID
         self.game_ID = None
         self.db = Database()
 
@@ -12,7 +12,6 @@ class Game():
         if self.player_ID == None:
             return {"error": "parametrit eivät täyty"} 
         try:
-            #CONNECT TO DB
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
             sql = "Insert into game(player_ID, start_airport, end_airport, player_airport, is_over, co2_consumed, points) VALUES(%s, %s, %s, %s, %s, %s, %s)"
@@ -22,21 +21,25 @@ class Game():
             self.select_game_airports(self.select_game_continent())
             self.select_game_questions()
 
-            start_airport = Airport().select_random_airport()
+            airport = Airport(self.game_ID)
+            start_airport = airport.select_random_airport()
+            airport.set_airport_visited(start_airport)
 
+            end_airport = airport.select_random_airport()
 
-            #SELECT START AIRPORT AND END AIRPORT AND UPDATE THE GAME IN DB 
+            sql = "UPDATE game SET start_airport = %s, end_airport = %s, player_airport = %s WHERE ID = %s"
+            cursor.execute(sql, (start_airport, end_airport, start_airport, self.game_ID))
+
             return {
                 "ID": self.game_ID,
                 "player_ID": self.player_ID,
                 "start_airport": start_airport,
-                "end_airport": None,
+                "end_airport": end_airport,
                 "player_airport": start_airport,
                 "is_over": 0,
                 "co2_consumed": 0,
                 "points": 0
             }
-        
             
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
@@ -85,7 +88,6 @@ class Game():
             cursor.execute(sql_selected_questions)
             questions = cursor.fetchall()
 
-
             sql_update_questions = "INSERT INTO game_question(question_ID, game_id, answered) VALUES(%s, %s, 0)"
             for question in questions:
                 cursor.execute(sql_update_questions, (question['ID'], self.game_ID))
@@ -100,14 +102,14 @@ class Game():
         return random.choice(["AF", "AS", "EU", "NA", "SA"]) 
 
 
-    def set_game_state(self, ID):
-        if ID == None:
+    def set_game_state(self):
+        if self.game_ID == None:
             return {"error": "ID:tä ei löytynyt"}
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
             sql = "UPDATE game SET is_over = 1 where ID = %s"
-            cursor.execute(sql, (ID,))
+            cursor.execute(sql, (self.game_ID,))
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
