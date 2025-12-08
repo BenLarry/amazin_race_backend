@@ -87,5 +87,5 @@ ok2 = peli.create_game(pelaaja1.id, kenttä1, kenttä2, kenttä1)
 
 
 
-ok = Airport(0, 0, 0, 48)
+ok = Airport('EDWG', 0, 0, 48)
 ok.get_airport()
