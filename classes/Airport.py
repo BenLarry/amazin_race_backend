@@ -1,6 +1,4 @@
-from database import Database
-from Game import Game
-from Login import Login
+from classes.Database import Database
 
 class Airport():
     def __init__(self, visited, special, game_id, ident = None):
@@ -9,8 +7,6 @@ class Airport():
         self.visited = visited
         self.special = special
         self.game_id = game_id
-        
-    
         
     def set_airport_visited(self):
         if self.ident == None:
@@ -27,7 +23,6 @@ class Airport():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
         
-
     def set_airport_special(self, game_id):
         if self.ident == None:
             return {"error": "Identtiä ei löydy"}
@@ -43,7 +38,6 @@ class Airport():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500  
         
-
     def get_airport(self):
         if self.ident == None:
             return {"error": "Identtiä ei löydy"}
@@ -60,32 +54,19 @@ class Airport():
             return {"error": "räätälöity virheilmoitus"}, 500
         except Exception as err:
             print(err)
-            return {"error": "geneerinen virheilmoitus"}, 500    
+            return {"error": "geneerinen virheilmoitus"}, 500
         
-
-peli = Game(6, "EU")
-
-maanosa = peli.select_game_continent()
-
-print(maanosa)
-
-ok = peli.select_game_airports(maanosa['continent'])
-
-kenttä1 = peli.select_random_airport()
-
-kenttä2 = peli.select_random_airport()
-
-
-pelaaja1 = Login("moi", 6)
-
-
-
-ok2 = peli.create_game(pelaaja1.id, kenttä1, kenttä2, kenttä1)
-
-
-
-
-
-
-ok = Airport('EDWG', 0, 0, 48)
-ok.get_airport()
+    def select_random_airport(self):
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "SELECT * FROM game_airport WHERE visited = 0 ORDER BY RAND() LIMIT 1"
+            cursor.execute(sql)
+            random_airport = cursor.fetchone()
+            return random_airport
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500   
