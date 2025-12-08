@@ -4,6 +4,7 @@ from classes.Player import Player
 from classes.Question import Question
 from classes.Game import Game
 from classes.Highscore import Highscore
+from classes.Airport import Airport
 
 
 app = Flask(__name__)
@@ -43,8 +44,11 @@ def highscore():
   params = request.args.to_dict()
 
   if request.method == 'GET':
-    highscore = Highscore(params["player_ID"]) 
-    return highscore.get_highscore()
+    highscore = Highscore()
+    if 'player_ID' in params: 
+      return highscore.get_highscore_params(params['player_ID'])
+    else:
+      return highscore.get_highscore()
   if request.method == 'POST':
     pass
 
@@ -58,6 +62,18 @@ def question():
   if request.method =='POST':
     question = Question()
     return question.set_question_answered(params['question_ID'])
+  
+
+@app.route("/airport", methods = ['GET', 'POST'])
+def airport():
+  params = request.args.to_dict()
+
+  if request.method =='GET':
+    airport = Airport(params['game_ID'])
+    return airport.get_airport()
+  if request.method == 'POST':
+    pass
+    
   
 
 
