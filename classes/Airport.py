@@ -1,9 +1,10 @@
 from classes.Database import Database
 
 class Airport():
-    def __init__(self, game_id):
+    def __init__(self, game_ID):
+        self.game_ID = game_ID
         self.db = Database()
-        self.game_ID = game_id
+
         
     def set_airport_visited(self, ident):
         try:
@@ -31,12 +32,12 @@ class Airport():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500  
         
-    def get_airport(self, ident):
+    def get_airport(self):
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
-            sql = "SELECT ident, id, name, type, latitude_deg, longitude_deg FROM game_airport WHERE ident = %s"
-            cursor.execute(sql, (ident, ))
+            sql = "SELECT ident, id, special, visited, game_ID FROM game_airport WHERE game_ID = %s"
+            cursor.execute(sql, (self.game_ID, ))
             airport_data = cursor.fetchall()
             return airport_data
         except self.db.connector.errors.ProgrammingError as err:

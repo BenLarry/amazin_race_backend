@@ -1,20 +1,17 @@
 from classes.Database import Database
 
 class Question():
-    def __init__(self, game_ID, points ="", level = "" ,question = "", ID = None):
+    def __init__(self, ID=None):
         self.db = Database()
         self.ID = ID
-        self.game_ID = game_ID
-        self.question = question
-        self.points = points
-        self.level = level 
+      
 
     def get_question(self):
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
             sql = """ 
-            SELECT question.ID, question.question, question.points, answer.choice, answer.is_correct
+            SELECT name, question.ID, question.question, question.points, answer.choice, answer.is_correct
             FROM (
                 SELECT game_question.question_ID 
                 FROM game_question
@@ -58,6 +55,13 @@ class Question():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
         
-    def set_question_answered(self):
-        pass
+    def set_question_answered(self, ID):
+        conn = self.db.get_conn()
+        cursor = conn.cursor()
+        sql = "update game_question set answered = 1 where ID = %s"
+        cursor.execute(sql, (ID,))
+        return {
+            "ID": ID,
+            "answered": 1, 
+        }
 
