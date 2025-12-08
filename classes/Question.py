@@ -1,9 +1,10 @@
 from classes.Database import Database
 
 class Question():
-    def __init__(self, points ="", level = "" ,question = "", ID = None):
+    def __init__(self, game_ID, points ="", level = "" ,question = "", ID = None):
         self.db = Database()
         self.ID = ID
+        self.game_ID = game_ID
         self.question = question
         self.points = points
         self.level = level 
@@ -57,34 +58,3 @@ class Question():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
 
-    def select_game_questions(self, game_id):
-        if game_id == '':
-            return {"error": "game_ID:tä ei löydy"}
-        try:
-            conn = self.db.get_conn()
-            cursor = conn.cursor(dictionary=True)
-            sql_selected_questions = """
-            (
-                SELECT * FROM question WHERE level = 1 ORDER BY RAND() LIMIT 10
-            )
-            UNION ALL
-            (
-            SELECT * FROM question WHERE level = 2 ORDER BY RAND() LIMIT 10 
-            )
-            UNION ALL
-            (
-                SELECT * FROM question WHERE level = 3 ORDER BY RAND() LIMIT 10
-            )
-            """
-            cursor.execute(sql_selected_questions)
-            questions = cursor.fetchall()
-
-            sql_update_questions = "INSERT INTO game_question(question_ID, game_id, answered) VALUES(%s, %s, 0)"
-            for question in questions:
-                cursor.execute(sql_update_questions, (question['ID'], game_id))
-        except self.db.connector.errors.ProgrammingError as err:
-            print(err)
-            return {"error": "räätälöity virheilmoitus"}, 500
-        except Exception as err:
-            print(err)
-            return {"error": "geneerinen virheilmoitus"}, 500    

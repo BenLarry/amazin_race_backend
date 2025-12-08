@@ -54,4 +54,19 @@ class Airport():
             return {"error": "räätälöity virheilmoitus"}, 500
         except Exception as err:
             print(err)
-            return {"error": "geneerinen virheilmoitus"}, 500    
+            return {"error": "geneerinen virheilmoitus"}, 500
+        
+    def select_random_airport(self):
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "SELECT * FROM game_airport WHERE visited = 0 ORDER BY RAND() LIMIT 1"
+            cursor.execute(sql)
+            random_airport = cursor.fetchone()
+            return random_airport
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500   
