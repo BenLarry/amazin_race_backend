@@ -17,7 +17,7 @@ def login():
   params = request.args.to_dict()
 
   if request.method == 'GET':
-    user = Player(params["name"], params["ID"]).login_player()
+    user = Player(params["name"], params["player_ID"]).login_player()
     return user
   if request.method == 'POST':
     user = Player(params["name"]).create_player()
