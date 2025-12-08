@@ -17,12 +17,11 @@ def login():
   params = request.args.to_dict()
 
   if request.method == 'GET':
-    pass
-    #user = Login(params["name"], params["ID"]).login_player()
-    #return user
+    user = Player(params["name"], params["player_ID"]).login_player()
+    return user
   if request.method == 'POST':
-    return params
-    #x = Login(name, 1)
+    user = Player(params["name"]).create_player()
+    return user
 
 @app.route("/game", methods=['GET', 'POST'])
 def game():
@@ -34,6 +33,8 @@ def game():
   if request.method == 'POST':
     game = Game(params["player_ID"])
     return game.create_game()
+  
+
     
 
 if __name__ == "__main__":
