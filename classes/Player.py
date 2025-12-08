@@ -1,7 +1,7 @@
 from classes.Database import Database
 
 class Player():
-    def __init__(self, name, id):
+    def __init__(self, name, id = None):
         self.id = id
         self.name = name
         self.db = Database()
