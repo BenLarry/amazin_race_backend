@@ -1,6 +1,4 @@
-from database import Database
-from Login import Login
-from Game import Game
+from classes.Database import Database
 
 class Question():
     def __init__(self, points ="", level = "" ,question = "", ID = None):
@@ -8,9 +6,7 @@ class Question():
         self.ID = ID
         self.question = question
         self.points = points
-        self.level = level
-
-        
+        self.level = level 
 
     def get_question(self):
         try:
@@ -61,9 +57,6 @@ class Question():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
 
-
-
-
     def select_game_questions(self, game_id):
         if game_id == '':
             return {"error": "game_ID:tä ei löydy"}
@@ -85,8 +78,6 @@ class Question():
             """
             cursor.execute(sql_selected_questions)
             questions = cursor.fetchall()
-            
-
 
             sql_update_questions = "INSERT INTO game_question(question_ID, game_id, answered) VALUES(%s, %s, 0)"
             for question in questions:
@@ -97,26 +88,3 @@ class Question():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
-
-
-        
-
-        
-pelaaja1 = Login("moi", 6)
-
-peli = Game(pelaaja1.id, "EU")
-
-
-okei = peli.get_game(pelaaja1.id)
-
-print("--------------------------------------")
-print(okei)
-print("----------------------------------------")     
-ok = Question()
-jees = ok.select_game_questions(okei['ID'])
-
-kysymys= ok.get_question()
-
-
-for i in range(1, 4): 
-    print(kysymys[f"choice_{i}"]["answer"])

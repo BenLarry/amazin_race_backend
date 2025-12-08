@@ -1,6 +1,4 @@
-from database import Database
-from Game import Game
-from Login import Login
+from classes.Database import Database
 
 class Airport():
     def __init__(self, visited, special, game_id, ident = None):
@@ -9,8 +7,6 @@ class Airport():
         self.visited = visited
         self.special = special
         self.game_id = game_id
-        
-    
         
     def set_airport_visited(self):
         if self.ident == None:
@@ -27,7 +23,6 @@ class Airport():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
         
-
     def set_airport_special(self, game_id):
         if self.ident == None:
             return {"error": "Identtiä ei löydy"}
@@ -43,7 +38,6 @@ class Airport():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500  
         
-
     def get_airport(self):
         if self.ident == None:
             return {"error": "Identtiä ei löydy"}
@@ -61,31 +55,3 @@ class Airport():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
-        
-
-peli = Game(6, "EU")
-
-maanosa = peli.select_game_continent()
-
-print(maanosa)
-
-ok = peli.select_game_airports(maanosa['continent'])
-
-kenttä1 = peli.select_random_airport()
-
-kenttä2 = peli.select_random_airport()
-
-
-pelaaja1 = Login("moi", 6)
-
-
-
-ok2 = peli.create_game(pelaaja1.id, kenttä1, kenttä2, kenttä1)
-
-
-
-
-
-
-ok = Airport(0, 0, 0, 48)
-ok.get_airport()

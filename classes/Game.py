@@ -1,5 +1,5 @@
-from database import Database
-from Login import Login
+from classes.Database import Database
+
 class Game():
     def __init__(self, player_id = None, continent = None):
         self.player_ID = player_id
@@ -112,31 +112,3 @@ class Game():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
-
-
-
-pelaaja1 = Login("moi", 6)
-
-peli = Game(pelaaja1.id, "EU")
-
-ok = peli.get_game(pelaaja1.id)
-
-print(ok)
-
-peli.set_game_state(ok['ID'])
-#maanosa = peli.select_game_continent()
-
-#print(maanosa)
-
-#ok = peli.select_game_airports(maanosa['continent'])
-
-#kenttä1 = peli.select_random_airport()
-
-#kenttä2 = peli.select_random_airport()
-
-
-
-
-
-
-#ok2 = peli.create_game(pelaaja1.id, kenttä1, kenttä2, kenttä1)
