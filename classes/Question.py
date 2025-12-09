@@ -11,7 +11,7 @@ class Question():
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
             sql = """ 
-            SELECT name, question.ID, question.question, question.points, answer.choice, answer.is_correct
+            SELECT question.ID, question.question, question.points, answer.choice, answer.is_correct
             FROM (
                 SELECT game_question.question_ID 
                 FROM game_question
