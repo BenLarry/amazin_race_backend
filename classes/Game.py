@@ -3,9 +3,9 @@ from classes.Airport import Airport
 import random
 
 class Game():
-    def __init__(self, player_ID = None):
+    def __init__(self, player_ID = None, game_ID = None):
         self.player_ID = player_ID
-        self.game_ID = None
+        self.game_ID = game_ID
         self.db = Database()
 
     def create_game(self):
@@ -21,9 +21,14 @@ class Game():
             self.select_game_airports(self.select_game_continent())
             self.select_game_questions()
 
+            
             airport = Airport(self.game_ID)
             start_airport = airport.select_random_airport()
             airport.set_airport_visited(start_airport)
+
+            for i in range(5):
+                airport.select_random_airport()
+                airport.set_airport_special()
 
             end_airport = airport.select_random_airport()
 
@@ -59,6 +64,7 @@ class Game():
             sql_update = "INSERT INTO game_airport(ident, special, visited, game_ID) VALUES (%s, %s, %s, %s)"
             for airport in chosen_airports:
                 cursor.execute(sql_update, (airport['ident'], 0, 0, self.game_ID))
+            return chosen_airports    
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
@@ -134,3 +140,49 @@ class Game():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
+        
+
+
+    def move_player(self, ident, game_ID):
+        if game_ID == None:
+            return {"error": "game_id ei löydy"}
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "update game set player_airport = %s where ID = %s AND player_ID = %s" 
+            cursor.execute(sql, (ident, game_ID, self.player_ID))
+            cursor.fetchall()
+            return
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500    
+        
+       
+
+    def add_points(self, amount, game_ID):
+        if game_ID == None:
+            return {"error": "game_id ei löydy"}
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "select points from game where ID = %s AND is_over = 0"
+            cursor.execute(sql, (game_ID,))
+            game = cursor.fetchone()
+
+            if not game:
+                return{"error":"ei löydy peliä"}
+            
+            total = game["points"] + amount
+            sql_2 = "update game set points = %s where ID = %s"
+            cursor.execute(sql_2, (total, game_ID,))
+            return {"points": total}
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500    
+        

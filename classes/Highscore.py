@@ -13,6 +13,7 @@ class Highscore():
         sql = """select player.name, MAX(game.points) as top_points
                 from game
                 inner join player on game.player_ID = player.ID
+                where is_over = 1
                 GROUP BY player.name
                 order BY top_points DESC
                 limit 10
@@ -27,7 +28,7 @@ class Highscore():
         sql = """select player.name, MAX(game.points) as top_points
                 from game
                 inner join player on game.player_ID = player.ID
-                where game.player_id = %s
+                where game.player_id = %s and is_over = 1
                 order BY top_points DESC
                 limit 1
             """

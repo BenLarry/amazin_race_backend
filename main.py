@@ -35,7 +35,12 @@ def game():
     return game.get_game()
   if request.method == 'POST':
     game = Game(params["player_ID"])
-    return game.create_game()
+    if "ident" in params:
+      return game.move_player(params["ident"], params["game_ID"])
+    elif "amount" in params:
+      return game.add_points(int(params["amount"]), params["game_ID"])
+    else:
+      return game.create_game()
   
 
 
@@ -65,16 +70,23 @@ def question():
   
 
 @app.route("/airport", methods = ['GET', 'POST'])
-def airport():
+@app.route("/airport/<cost>")
+def airport(cost = None):
   params = request.args.to_dict()
-
+  if request.method == 'GET' and cost != None:
+    airport = Airport(params['game_ID'])
+    return airport.calculate_co2()  
   if request.method =='GET':
     airport = Airport(params['game_ID'])
     return airport.get_airport()
   if request.method == 'POST':
-    pass
+    airport = Airport(params['game_ID'])
+    if "ident" in params:
+      return airport.set_airport_visited(params['ident'])
     
-  
+
+
+
 
 
 if __name__ == "__main__":
