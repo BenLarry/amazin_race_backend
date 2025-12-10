@@ -150,8 +150,11 @@ class Game():
             cursor = conn.cursor(dictionary=True)
             sql = "update game set player_airport = %s where ID = %s AND player_ID = %s" 
             cursor.execute(sql, (ident, game_ID, self.player_ID))
+            airport = Airport(self.game_ID)
+            airport.set_airport_visited(ident)
             cursor.fetchall()
-            return
+            return "player moved"
+            
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
