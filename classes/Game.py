@@ -26,14 +26,12 @@ class Game():
             start_airport = airport.select_random_airport()
             airport.set_airport_visited(start_airport)
 
-            for i in range(5):
-                airport.select_random_airport()
-                airport.set_airport_special()
-
-            end_airport = airport.select_random_airport()
-
             sql = "UPDATE game SET start_airport = %s, end_airport = %s, player_airport = %s WHERE ID = %s"
             cursor.execute(sql, (start_airport, end_airport, start_airport, self.game_ID))
+            end_airport = airport.select_random_airport()
+
+            for i in range(5):
+                airport.set_airport_special(airport.select_random_airport())
 
             return {
                 "ID": self.game_ID,
