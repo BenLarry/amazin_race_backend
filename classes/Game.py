@@ -129,7 +129,7 @@ class Game():
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
-            sql = "select * from game where player_id = %s AND is_over = %s"
+            sql = "select * from game where player_ID = %s AND is_over = %s"
             cursor.execute(sql, (self.player_ID, 0))
             game = cursor.fetchall()
             return game
@@ -138,8 +138,11 @@ class Game():
             return {"error": "räätälöity virheilmoitus"}, 500
         except Exception as err:
             print(err)
-            return {"error": "geneerinen virheilmoitus"}, 500    
+            return {"error": "geneerinen virheilmoitus"}, 500        
         
+
+
+
 
 
     def move_player(self, ident, game_ID):
