@@ -21,6 +21,8 @@ class Airport():
             return {"error": "geneerinen virheilmoitus"}, 500    
         
     def set_airport_special(self, ident):
+        if ident == None:
+            return "ei identtiä"
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
@@ -69,6 +71,8 @@ class Airport():
 
 
     def calculate_co2(self, ident):
+        if ident == None:
+            return "identtiä ei löydy"
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
@@ -105,6 +109,8 @@ class Airport():
 
 
     def update_co2(self, amount):
+        if amount == None:
+            return "määrää ei löydy"
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
