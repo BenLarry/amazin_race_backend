@@ -80,7 +80,9 @@ def airport(cost = None):
     airport = Airport(params['game_ID'])
     return airport.get_airport()
   if request.method == 'POST':
-    airport = Airport(params['game_ID'])
+    airport = Airport(params['game_ID'])  
+  if "amount" in params:
+    return airport.update_co2(params["amount"])
   if "ident" in params:
     return airport.set_airport_visited(params['ident'])
     

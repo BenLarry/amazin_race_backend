@@ -83,7 +83,7 @@ class Game():
             )
             UNION ALL
             (
-            SELECT * FROM question WHERE level = 2 ORDER BY RAND() LIMIT 10 
+                SELECT * FROM question WHERE level = 2 ORDER BY RAND() LIMIT 10 
             )
             UNION ALL
             (

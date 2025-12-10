@@ -100,4 +100,30 @@ class Airport():
             return {"error": "räätälöity virheilmoitus"}, 500
         except Exception as err:
             print(err)
-            return {"error": "geneerinen virheilmoitus"}, 500   
+            return {"error": "geneerinen virheilmoitus"}, 500 
+
+
+
+    def update_co2(self, amount):
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+
+            sql = "select co2_consumed from game where ID = %s AND is_over = 0"
+            cursor.execute(sql, (self.game_ID,))
+            co2 = cursor.fetchone()
+            print(co2)
+
+
+            total = co2['co2_consumed'] + int(amount)
+
+            sql_update = "update game set co2_consumed = %s where ID = %s"
+            cursor.execute(sql_update, (total, self.game_ID))
+            return "co2 updated"
+    
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500      
