@@ -32,9 +32,15 @@ def game():
   params = request.args.to_dict()
   if not params:
     return {"error": "Not found"}, 404
+  
+  print(params)
   if request.method == 'GET':
     game = Game(params["player_ID"])
-    return game.get_game()
+    if "game_ID" in params:
+      return game.get_game(params["game_ID"])
+    return game.get_games()
+    
+  
   if request.method == 'POST':
     game = Game(params["player_ID"])
   if "ident" in params:

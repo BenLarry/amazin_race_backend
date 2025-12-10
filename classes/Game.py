@@ -123,7 +123,7 @@ class Game():
             return {"error": "geneerinen virheilmoitus"}, 500    
 
 
-    def get_game(self):
+    def get_games(self):
         if self.player_ID == None:
             return {"error": "player_id ei löydy"}
         try:
@@ -139,6 +139,23 @@ class Game():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500        
+        
+    def get_game(self, game_ID):
+        if self.player_ID == None:
+            return {"error": "player_id ei löydy"}
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor(dictionary=True)
+            sql = "select * from game where player_ID = %s AND ID = %s"
+            cursor.execute(sql, (self.player_ID, game_ID))
+            game = cursor.fetchone()
+            return game
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500      
         
 
 
