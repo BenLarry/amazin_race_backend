@@ -35,8 +35,3 @@ palauttaa top 10 pelaajan highscoret
 /highscores?player_id GET
 palautaa pelaajan highscore sija kaikista pelaajista
 
-
-
-
-
-
