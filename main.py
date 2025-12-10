@@ -75,7 +75,7 @@ def airport(cost = None):
     return {"error": "Not found"}, 404
   if request.method == 'GET' and cost != None:
     airport = Airport(params['game_ID'])
-    return airport.calculate_co2()  
+    return airport.calculate_co2(params["ident"])
   if request.method =='GET':
     airport = Airport(params['game_ID'])
     return airport.get_airport()
