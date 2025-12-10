@@ -59,7 +59,7 @@ def question():
   params = request.args.to_dict()
   if request.method == 'GET':
     question = Question()
-    return question.get_question()
+    return question.get_question(params["game_ID"])
   if request.method =='POST':
     if not params:
       return {"error": "Not found"}, 404
