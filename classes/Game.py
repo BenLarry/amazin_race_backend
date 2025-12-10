@@ -30,9 +30,9 @@ class Game():
             sql = "UPDATE game SET start_airport = %s, end_airport = %s, player_airport = %s WHERE ID = %s"
             cursor.execute(sql, (start_airport, end_airport, start_airport, self.game_ID))
             
-            #BUGAA PELIN LUOMISEN
-            #for i in range(5):
-            #    airport.set_airport_special(airport.select_random_airport())
+            
+            for i in range(5):
+                airport.set_airport_special(airport.select_random_airport())
 
             return {
                 "ID": self.game_ID,

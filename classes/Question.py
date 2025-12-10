@@ -56,12 +56,18 @@ class Question():
             return {"error": "geneerinen virheilmoitus"}, 500    
         
     def set_question_answered(self, ID):
-        conn = self.db.get_conn()
-        cursor = conn.cursor()
-        sql = "update game_question set answered = 1 where ID = %s"
-        cursor.execute(sql, (ID,))
-        return {
-            "ID": ID,
-            "answered": 1, 
-        }
-
+        try:
+            conn = self.db.get_conn()
+            cursor = conn.cursor()
+            sql = "update game_question set answered = 1 where ID = %s"
+            cursor.execute(sql, (ID,))
+            return {
+                "ID": ID,
+                "answered": 1, 
+            }
+        except self.db.connector.errors.ProgrammingError as err:
+            print(err)
+            return {"error": "räätälöity virheilmoitus"}, 500
+        except Exception as err:
+            print(err)
+            return {"error": "geneerinen virheilmoitus"}, 500   

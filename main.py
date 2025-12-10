@@ -18,7 +18,8 @@ def helloWorld():
 @app.route("/login", methods=['GET', 'POST'])
 def login():
   params = request.args.to_dict()
-
+  if not params:
+    return {"error": "Not found"}, 404
   if request.method == 'GET':
     user = Player(params["name"], params["player_ID"]).login_player()
     return user
@@ -29,42 +30,39 @@ def login():
 @app.route("/game", methods=['GET', 'POST'])
 def game():
   params = request.args.to_dict()
-  
+  if not params:
+    return {"error": "Not found"}, 404
   if request.method == 'GET':
     game = Game(params["player_ID"])
     return game.get_game()
   if request.method == 'POST':
     game = Game(params["player_ID"])
-    if "ident" in params:
-      return game.move_player(params["ident"], params["game_ID"])
-    elif "amount" in params:
-      return game.add_points(int(params["amount"]), params["game_ID"])
-    else:
-      return game.create_game()
+  if "ident" in params:
+    return game.move_player(params["ident"], params["game_ID"])
+  if "amount" in params:
+    return game.add_points(int(params["amount"]), params["game_ID"])
+  return game.create_game()
   
 
 
 @app.route("/highscore", methods=['GET', 'POST'])
 def highscore():
   params = request.args.to_dict()
-
   if request.method == 'GET':
     highscore = Highscore()
-    if 'player_ID' in params: 
-      return highscore.get_highscore_params(params['player_ID'])
-    else:
-      return highscore.get_highscore()
-  if request.method == 'POST':
-    pass
+  if 'player_ID' in params: 
+    return highscore.get_highscore_params(params['player_ID'])
+  return highscore.get_highscore()
 
 @app.route("/question", methods = ['GET', 'POST'])
 def question():
   params = request.args.to_dict()
-
   if request.method == 'GET':
     question = Question()
     return question.get_question()
   if request.method =='POST':
+    if not params:
+      return {"error": "Not found"}, 404
     question = Question()
     return question.set_question_answered(params['question_ID'])
   
@@ -73,6 +71,8 @@ def question():
 @app.route("/airport/<cost>")
 def airport(cost = None):
   params = request.args.to_dict()
+  if not params:
+    return {"error": "Not found"}, 404
   if request.method == 'GET' and cost != None:
     airport = Airport(params['game_ID'])
     return airport.calculate_co2()  
@@ -81,8 +81,8 @@ def airport(cost = None):
     return airport.get_airport()
   if request.method == 'POST':
     airport = Airport(params['game_ID'])
-    if "ident" in params:
-      return airport.set_airport_visited(params['ident'])
+  if "ident" in params:
+    return airport.set_airport_visited(params['ident'])
     
 
 
