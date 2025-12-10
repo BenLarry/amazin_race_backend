@@ -47,6 +47,8 @@ def game():
     return game.move_player(params["ident"], params["game_ID"])
   if "amount" in params:
     return game.add_points(int(params["amount"]), params["game_ID"])
+  if "is_over" in params:
+    return game.set_game_state(params["game_ID"])
   return game.create_game()
   
 

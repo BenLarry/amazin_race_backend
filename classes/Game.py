@@ -107,14 +107,13 @@ class Game():
         return random.choice(["AF", "AS", "EU", "NA", "SA"]) 
 
 
-    def set_game_state(self):
-        if self.game_ID == None:
-            return {"error": "ID:tä ei löytynyt"}
+    def set_game_state(self, game_ID):
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
             sql = "UPDATE game SET is_over = 1 where ID = %s"
-            cursor.execute(sql, (self.game_ID,))
+            cursor.execute(sql, (game_ID,))
+            return f"game is over"
         except self.db.connector.errors.ProgrammingError as err:
             print(err)
             return {"error": "räätälöity virheilmoitus"}, 500
