@@ -6,7 +6,7 @@ class Question():
         self.ID = ID
       
 
-    def get_question(self):
+    def get_question(self, game_ID):
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor(dictionary=True)
@@ -16,7 +16,7 @@ class Question():
                 SELECT game_question.question_ID 
                 FROM game_question
                 INNER JOIN question ON game_question.question_ID = question.ID
-                WHERE game_question.answered = 0
+                WHERE game_question.answered = 0 and game_ID =%s
                 ORDER BY RAND()
                 LIMIT 1
             ) AS random_question
@@ -25,27 +25,31 @@ class Question():
             INNER JOIN answer ON question_answer.answer_ID = answer.ID
             ORDER BY answer.ID;
             """
-            cursor.execute(sql)
+            cursor.execute(sql, (game_ID,))
             result = cursor.fetchall()
             formatted_question = {
                 "ID": result[0]["ID"],
                 "question": result[0]["question"],
                 "points": result[0]["points"],
-                "choice_1": {
-                    "ID": 1,
-                    "answer": result[0]["choice"],
-                    "is_correct": result[0]["is_correct"]
-                },
-                "choice_2": {
-                    "ID": 2,
-                    "answer": result[1]["choice"],
-                    "is_correct": result[1]["is_correct"]
-                },
-                "choice_3": {
-                    "ID": 3,
-                    "answer": result[2]["choice"],
-                    "is_correct": result[2]["is_correct"]
-                },
+                "answer": [
+                    {
+                        "ID": 1,
+                        "answer": result[0]["choice"],
+                        "is_correct": result[0]["is_correct"]
+                    
+                    },
+                    {
+                        "ID": 2,
+                        "answer": result[1]["choice"],
+                        "is_correct": result[1]["is_correct"]
+                    },
+                    {
+                        "ID": 3,
+                        "answer": result[2]["choice"],
+                        "is_correct": result[2]["is_correct"]
+                    }
+
+                ]
             }
             return formatted_question
         except self.db.connector.errors.ProgrammingError as err:
@@ -71,3 +75,5 @@ class Question():
         except Exception as err:
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500   
+
+    
