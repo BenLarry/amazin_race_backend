@@ -63,7 +63,7 @@ class Question():
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor()
-            sql = "update game_question set answered = 1 where ID = %s AND game_ID= %s"
+            sql = "update game_question set answered = 1 where question_ID = %s AND game_ID= %s"
             cursor.execute(sql, (ID, game_ID))
             return {
                 "ID": ID,
