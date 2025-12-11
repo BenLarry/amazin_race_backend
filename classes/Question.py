@@ -59,12 +59,12 @@ class Question():
             print(err)
             return {"error": "geneerinen virheilmoitus"}, 500    
         
-    def set_question_answered(self, ID):
+    def set_question_answered(self, ID, game_ID):
         try:
             conn = self.db.get_conn()
             cursor = conn.cursor()
-            sql = "update game_question set answered = 1 where ID = %s"
-            cursor.execute(sql, (ID,))
+            sql = "update game_question set answered = 1 where ID = %s AND game_ID= %s"
+            cursor.execute(sql, (ID, game_ID))
             return {
                 "ID": ID,
                 "answered": 1, 

@@ -72,7 +72,7 @@ def question():
     if not params:
       return {"error": "Not found"}, 404
     question = Question()
-    return question.set_question_answered(params['ID'])
+    return question.set_question_answered(params['ID'], params["game_ID"])
   
 
 @app.route("/airport", methods = ['GET', 'POST'])
